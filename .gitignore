@@ -1,0 +1,6 @@
+# Python related
+.ipynb_checkpoints
+__pycache__/
+
+# VSCode stuff
+.vscode
