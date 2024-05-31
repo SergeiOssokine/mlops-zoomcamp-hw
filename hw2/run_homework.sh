@@ -11,7 +11,7 @@ header() {
     echo
 }
 
-echo "Beggining HW 2"
+echo "Beginning HW 2"
 
 # Use a custom port for convenience
 PORT=7766
