@@ -21,6 +21,8 @@ def ingest_files(**kwargs) -> pd.DataFrame:
         df = pd.read_parquet(BytesIO(r.content))
     else:
         raise Exception(r.text)
+
+    print(f"The number of rows in the loaded data is {df.shape[0]}")
     return df
 
 
