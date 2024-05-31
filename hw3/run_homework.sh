@@ -69,5 +69,5 @@ python get_model_intercept.py --model-uri=${run_id}
 header "Question 6"
 # Extract the model size info
 
-msize=$(curl -s -X GET "http://localhost:${MLFLOW_PORT}/api/2.0/mlflow/runs/get?run_id=ad416c059e1a4ba796e3b876bf449619" | jq -c '.run.data.tags | .[] | select(.key | contains("history")) .value | fromjson | .[0].model_size_bytes')
+msize=$(curl -s -X GET "http://localhost:${MLFLOW_PORT}/api/2.0/mlflow/runs/get?run_id=${run_id}" | jq -c '.run.data.tags | .[] | select(.key | contains("history")) .value | fromjson | .[0].model_size_bytes')
 echo "The size of the model is ${msize} bytes"
