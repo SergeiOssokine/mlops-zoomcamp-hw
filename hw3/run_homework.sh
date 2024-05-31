@@ -11,10 +11,14 @@ header() {
     echo
 }
 
-echo "Beggining HW 2"
+echo "Beginning HW 3"
 
 # Use a custom port for convenience
 MLFLOW_PORT=5012
+
+# Q1
+header "Question 1"
+echo "We are running mage version v0.9.70"
 
 # Q2
 header "Question 2"
@@ -27,10 +31,10 @@ echo "The number of lines in the metadata file is ${nlines}"
 header "Question 3"
 echo "Running the data preparation pipeline"
 # First we run the data preparation pipeline
-#curl -X POST http://localhost:6789/api/pipeline_schedules/19/pipeline_runs/e915d5aaa09f4e1984eaffb849839ec2   --header 'Content-Type: application/json'
+curl -X POST http://localhost:6789/api/pipeline_schedules/19/pipeline_runs/e915d5aaa09f4e1984eaffb849839ec2   --header 'Content-Type: application/json'
 # Wait for it to finish
 echo "Waiting 30 seconds for the pipeline to finish"
-#sleep 30
+sleep 30
 # Now get the rows
 nrows=$(curl -s --location 'http://localhost:6789/api/pipelines/data_preparation/blocks/ingest' | jq '.block.outputs[0].shape[0]')
 
@@ -46,14 +50,14 @@ echo "The number of rows after processing is ${nrows_processed}"
 header "Question 5"
 echo "Running the training pipeline"
 # Run the training pipeline
-#curl -X POST http://localhost:6789/api/pipeline_schedules/20/pipeline_runs/93d00aa4ae324b0495552f7d6b68645c   --header 'Content-Type: application/json'
+curl -X POST http://localhost:6789/api/pipeline_schedules/20/pipeline_runs/93d00aa4ae324b0495552f7d6b68645c   --header 'Content-Type: application/json'
 # Wait for pipeline to finish
 echo "Waiting 140 seconds for the training pipeline to finish"
-#sleep 140
+sleep 140
 
 # Get the run_id from mlflow
 
-run_id=$(curl -s -X POST "http://localhost:5012/api/2.0/mlflow/runs/search" -H "Content-Type: application/json" -d '{"experiment_ids":["1"],"max_results":1}' | jq -r '.runs[0].info.run_id')
+run_id=$(curl -s -X POST "http://localhost:${MLFLOW_PORT}/api/2.0/mlflow/runs/search" -H "Content-Type: application/json" -d '{"experiment_ids":["1"],"max_results":1}' | jq -r '.runs[0].info.run_id')
 
 echo "The run ID in mlflow is ${run_id}"
 
@@ -65,5 +69,5 @@ python get_model_intercept.py --model-uri=${run_id}
 header "Question 6"
 # Extract the model size info
 
-msize=$(curl -s -X GET "http://localhost:5012/api/2.0/mlflow/runs/get?run_id=ad416c059e1a4ba796e3b876bf449619" | jq -c '.run.data.tags | .[] | select(.key | contains("history")) .value | fromjson | .[0].model_size_bytes')
+msize=$(curl -s -X GET "http://localhost:${MLFLOW_PORT}/api/2.0/mlflow/runs/get?run_id=ad416c059e1a4ba796e3b876bf449619" | jq -c '.run.data.tags | .[] | select(.key | contains("history")) .value | fromjson | .[0].model_size_bytes')
 echo "The size of the model is ${msize} bytes"
