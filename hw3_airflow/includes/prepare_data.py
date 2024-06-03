@@ -16,7 +16,7 @@ def fetch_data(year=2023, month=3):
     else:
         raise Exception(r.text)
 
-    print(f"The number of rows in the loaded data is {df.shape[0]}")
+    print(f"The number of rows in the original data is {df.shape[0]}")
     return df
 
 
@@ -29,6 +29,8 @@ def prepare_dataframe(year: int = 2023, month: int = 3):
 
     categorical = ["PULocationID", "DOLocationID"]
     df[categorical] = df[categorical].astype(str)
+    print(f"The number of rows in the processed data is {df.shape[0]}")
+
     return df
 
 
