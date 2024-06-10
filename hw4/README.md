@@ -2,9 +2,11 @@ This folder contains scripts to solve homework for week 4 of the [MLOps Zoomcamp
 For the actual questions, look [here](https://github.com/DataTalksClub/mlops-zoomcamp/blob/main/cohorts/2024/04-deployment/homework.md)
 
 ## Getting started
+
+### Set up the env
 Before doing anything we need to set up the environment, which will make our lives easier later. You can do this just by running `pipenv install`. This will use the info in `Pipfile` and `Pipfile.lock` to install everything you need. Then launch the env via `pipenv shell`.
 
-
+### Get the model from HW1 ready
 We need a saved model from Homework 1 in order to do this homework. Since we didn't actually save the model to disk in HW1, we recreate the training process here. First fetch the data via
 
 ```
@@ -17,11 +19,24 @@ To train the model we still use `mlflow` for logging. Then run the training scri
 python train_model.py
 ```
 
-This will generate `model_hw1.bin` and log the experiment. We can use this model for most of the rest of the questions.
+This will generate `model.bin` and log the experiment. We can use this model for most of the rest of the questions.
 
-To convert our `starter.ipynb` notebooker to a Python script we use `nbconvert` with `--to script`. By default this will create a python file that contains the (commented) prompt tags, like `# In[3]`. To get rid of those, we use `--no-prompt`. We also don't want empty lines or line magics in the output (since the latter won't work). To get rid of those we can use some regexp magic. In the end the full command is
+
+### Build the docker image
+In order to answer the last question we need to build the `Docker` container. Do
+
+```{bash}
+docker build -t hw4_predict .
+```
+
+
+
+## Additional info
+
+To convert our `starter.ipynb` notebook to a Python script we use `nbconvert` with `--to script`. By default this will create a python file that contains the (commented) prompt tags, like `# In[3]`. To get rid of those, we use `--no-prompt`. We also don't want empty lines or line magics in the output (since the latter won't work). To get rid of those we can use some regexp magic. In the end the full command is
 
 ```{bash}
 jupyter nbconvert  --to script   --no-prompt --RegexRemovePreprocessor.patterns="['\s*\Z','.*?water*']" starter.ipynb
 ```
 
+The script `predict.py` was created based on the result of the above command.
