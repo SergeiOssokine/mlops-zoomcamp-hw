@@ -1,6 +1,10 @@
+import json
 import os
 
+import docker
 import pandas as pd
+import typer
+from typing_extensions import Annotated
 
 S3_ENDPOINT_URL = os.getenv("S3_ENDPOINT_URL")
 
@@ -41,10 +45,23 @@ def setup_fake_data():
     write_to_s3(df_input)
 
 
-def perform_integration_test():
+def perform_integration_test(
+    env_file: Annotated[
+        str,
+        typer.Option(help="File containing the environmental variables", default=...),
+    ]
+):
     setup_fake_data()
-    # client = docker.from_env()
+    client = docker.from_env()
+    with open(env_file, "r") as fp:
+        env_vars = json.load(fp)
+    client.containers.run(
+        "hw6_integration",
+        command=["--year=2024", "--month=1"],
+        environment=env_vars,
+        network_mode="host",
+    )
 
 
 if __name__ == "__main__":
-    perform_integration_test()
+    typer.run(perform_integration_test)
