@@ -35,7 +35,13 @@ pytest -vvv tests
 and
 
 ```bash
-
+python tests/integration_test.py --env-file tests/env.json
 ```
 
+You can also run the integration test "manually" by running[^1]:
+
+```bash
 docker run --network=host -e S3_ENDPOINT_URL="http://localhost:4566" -e INPUT_FILE_PATTERN="test_input_{year:04d}-{month:02d}.parquet"  -e OUTPUT_FILE_PATTERN="test_otuput_{year:04d}-{month:02d}.parquet" -e AWS_ACCESS_KEY_ID=foo -e AWS_SECRET_ACCESS_KEY=bar -e AWS_DEFAULT_REGION=us-east-1 hw6_integration --year 2024 --month 1
+```
+
+[^1] Note the dummy AWS credentials: `localstack` does not need your real AWS credentials
